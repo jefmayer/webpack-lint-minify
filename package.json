@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Simple Webpack config for linting and then minifying CSS and JavaScript libraries",
   "scripts": {
-    "webpack": "webpack"
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch"
   },
   "author": "Jef Mayer",
   "license": "MIT",
@@ -13,7 +14,6 @@
     "autoprefixer": "^10.4.20",
     "babel-loader": "^9.2.1",
     "css-loader": "^7.1.2",
-    "css-minimizer-webpack-plugin": "^7.0.0",
     "eslint-webpack-plugin": "^4.2.0",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8.5.1",

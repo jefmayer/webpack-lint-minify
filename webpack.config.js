@@ -1,3 +1,4 @@
+const config = require('./project-config');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -7,10 +8,7 @@ const StylelintPlugin = require('stylelint-webpack-plugin');
 module.exports = [
   {
     mode: 'production',
-    entry: {
-      layout: './assets/src/js/layout.js',
-      modules: './assets/src/js/modules.js',
-    },
+    entry: config.paths.js,
     output: {
       filename: '[name].min.js',
       path: path.resolve(__dirname, 'assets/dist/js'),
@@ -20,12 +18,18 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.jsx?$/,
           exclude: /node_modules/,
+          resolve: {
+            extensions: ['.js', '.jsx'],
+          },
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'],
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react',
+              ],
             },
           },
         },
@@ -38,15 +42,18 @@ module.exports = [
       ],
     },
     plugins: [
-      new ESLintPlugin({ extensions: ['js'] }),
+      new ESLintPlugin({ extensions: ['js', 'jsx'] }),
     ],
     devtool: 'source-map',
   },
   {
     mode: 'production',
-    entry: {
-      styles: './assets/src/scss/styles.scss',
-    },
+    entry: config.paths.css,
+    ignoreWarnings: [
+      (warning) => {
+        return warning.message.includes('Deprecation Warning') || warning.message.includes('Module Warning');
+      },
+    ],
     output: {
       path: path.resolve(__dirname, 'assets/dist/css'),
     },

@@ -6,6 +6,7 @@
     "node": "18.18.0"
   },
   "scripts": {
+    "prebuild": ". ~/.nvm/nvm.sh && nvm use 18.18.0",
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch"
   },

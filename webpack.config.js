@@ -34,7 +34,7 @@ class RemoveFilePlugin {
       Object.keys(files).forEach(key => {
         try {
           const file = files[key].match(/\/([^\/]+)\.scss$/)[1];
-          const assetPath = path.resolve(__dirname, `assets/dist/css/${file}.js`);
+          const assetPath = path.resolve(__dirname, `${config.paths.dirs.dist.css}/${file}.js`);
           if (fs.existsSync(assetPath)) {
             fs.unlinkSync(assetPath);
           }
@@ -49,10 +49,10 @@ class RemoveFilePlugin {
 module.exports = [
   {
     mode: 'production',
-    entry: config.paths.js,
+    entry: config.paths.files.src.js,
     output: {
       filename: '[name].min.js',
-      path: path.resolve(__dirname, 'assets/dist/js'),
+      path: path.resolve(__dirname, config.paths.dirs.dist.js),
       clean: true,
       sourceMapFilename: '[name].min.js.map',
     },
@@ -86,8 +86,8 @@ module.exports = [
       new ESLintPlugin({ extensions: ['js', 'jsx'] }),
       new CreateDirectoryPlugin({
         directories: [
-          path.resolve(__dirname, 'assets/dist/css'),
-          path.resolve(__dirname, 'assets/dist/js')
+          path.resolve(__dirname, config.paths.dirs.dist.css),
+          path.resolve(__dirname, config.paths.dirs.dist.js)
         ]
       })
     ],
@@ -95,14 +95,14 @@ module.exports = [
   },
   {
     mode: 'production',
-    entry: config.paths.css,
+    entry: config.paths.files.src.scss,
     ignoreWarnings: [
       (warning) => {
         return warning.message.includes('Deprecation Warning') || warning.message.includes('Module Warning');
       },
     ],
     output: {
-      path: path.resolve(__dirname, 'assets/dist/css'),
+      path: path.resolve(__dirname, config.paths.dirs.dist.css),
     },
     module: {
       rules: [
@@ -119,8 +119,8 @@ module.exports = [
     },
     plugins: [
       new MiniCssExtractPlugin({ filename: '[name].min.css' }),
-      new StylelintPlugin({ files: 'assets/src/scss/**/*.{scss,sass,css}' }),
-      new RemoveFilePlugin({ files: config.paths.css }), 
+      new StylelintPlugin({ files: `${config.paths.dirs.src.scss}/**/*.{scss,sass,css}` }),
+      new RemoveFilePlugin({ files: config.paths.files.src.scss }), 
     ],
     devtool: 'source-map',
   }
